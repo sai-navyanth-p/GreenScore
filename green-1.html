@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reward Incentive - Sustainable Transactions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        header {
+            background-color: #00796b;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header img {
+            height: 40px;
+        }
+        header h1 {
+            font-size: 1.5em;
+        }
+        .account-details {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #ffffff;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .account-details div {
+            width: 30%;
+        }
+        .account-details div h2 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .green-score {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #388e3c;
+            color: white;
+            font-size: 1.2em;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px;
+        }
+        .action-buttons button {
+            padding: 20px;
+            font-size: 1.2em;
+            border: none;
+            background-color: #00796b;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 150px;
+            transition: background-color 0.3s ease;
+        }
+        .action-buttons button:hover {
+            background-color: #004d40;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+        th {
+            background-color: #00796b;
+            color: white;
+        }
+        tr.eco {
+            background-color: #e8f5e9;
+        }
+        .chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            display: none;
+        }
+        .chatbot-header {
+            background-color: #00796b;
+            color: white;
+            padding: 10px;
+            font-size: 1.2em;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .chatbot-body {
+            height: 80%;
+            overflow-y: auto;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+        .chatbot-footer {
+            display: flex;
+            margin-top: 10px;
+        }
+        .chatbot-footer input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .chatbot-footer button {
+            padding: 10px;
+            margin-left: 10px;
+            font-size: 1em;
+            background-color: #00796b;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .chatbot-footer button:hover {
+            background-color: #004d40;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="https://via.placeholder.com/100" alt="Bank Logo">
+    <h1>Reward Incentive Bank</h1>
+</header>
+
+<div class="account-details">
+    <div>
+        <h2>Account Details</h2>
+        <p>Account Holder: John Doe</p>
+        <p>Account Type: Checking</p>
+        <p>Account Number: XXXX-1234</p>
+    </div>
+    <div>
+        <h2>Balance</h2>
+        <p><strong>$5,234.67</strong></p>
+    </div>
+    <div>
+        <h2>Last Login</h2>
+        <p>Feb 8, 2025</p>
+    </div>
+</div>
+
+<div class="green-score">
+    Green Score: <span id="green-score">85</span> points
+</div>
+
+<div class="action-buttons">
+    <button onclick="alert('Transaction history')">View Transactions</button>
+    <button onclick="alert('Eco Shopping Tips')">Eco Shopping Tips</button>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Transaction ID</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Balance</th>
+            <th>Eco</th>
+            <th>Total Eco</th>
+        </tr>
+    </thead>
+    <tbody id="transaction-table">
+        <!-- Example row with Eco highlighted -->
+        <tr class="eco">
+            <td>TXN1001</td>
+            <td>Feb 7, 2025</td>
+            <td>Direct Deposit – Refund</td>
+            <td>Credit</td>
+            <td>$186.27</td>
+            <td>$3,686.27</td>
+            <td>Yes</td>
+            <td>$50.00</td>
+        </tr>
+        <tr>
+            <td>TXN1002</td>
+            <td>Feb 6, 2025</td>
+            <td>Grocery Purchase</td>
+            <td>Debit</td>
+            <td>$120.50</td>
+            <td>$3,566.27</td>
+            <td>No</td>
+            <td>$0.00</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="chatbot" id="chatbot">
+    <div class="chatbot-header">
+        Chatbot
+    </div>
+    <div class="chatbot-body" id="chatbot-body">
+        <!-- Chat messages will appear here -->
+    </div>
+    <div class="chatbot-footer">
+        <input type="text" id="chat-input" placeholder="Ask something...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    // Simulating interaction with chatbot
+    function sendMessage() {
+        var input = document.getElementById("chat-input").value;
+        if(input) {
+            var chatbotBody = document.getElementById("chatbot-body");
+            var newMessage = document.createElement("div");
+            newMessage.textContent = "You: " + input;
+            chatbotBody.appendChild(newMessage);
+
+            // Simulate response from chatbot
+            var response = document.createElement("div");
+            response.textContent = "Chatbot: " + "Thank you for your inquiry!";
+            chatbotBody.appendChild(response);
+
+            // Clear the input field
+            document.getElementById("chat-input").value = "";
+            chatbotBody.scrollTop = chatbotBody.scrollHeight; // Scroll to bottom
+        }
+    }
+
+    // Toggle chatbot visibility
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('chatbot').style.display = 'block'; // Show chatbot
+    });
+</script>
+
+</body>
+</html>

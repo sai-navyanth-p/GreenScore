@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Account, Transactions & Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    /* Main container as a flex box */
+    .main-container {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    /* Left container for account details & transactions */
+    .left-container {
+      flex: 2;
+    }
+    /* Right container for chatbot */
+    .right-container {
+      flex: 1;
+      max-width: 300px;
+    }
+    /* General container styling */
+    .container {
+      background: #fff;
+      margin-bottom: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .info {
+      margin: 10px 0;
+      font-size: 1.1em;
+    }
+    .label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    /* Style for eco points to display in green */
+    .eco-points {
+      color: green;
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background: #eee;
+    }
+    /* Highlight eco transactions in light green */
+    .eco-transaction {
+      background-color: #d4edda;
+    }
+    /* Chatbot window styling */
+    .chatbot-window {
+      display: flex;
+      flex-direction: column;
+      height: 500px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .chatbot-header {
+      background: #007bff;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .chatbot-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+    .chatbot-input-container {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    .chatbot-input-container input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      outline: none;
+    }
+    .chatbot-input-container button {
+      padding: 10px;
+      border: none;
+      background: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+    /* Message bubbles */
+    .message {
+      margin: 5px 0;
+      padding: 8px 12px;
+      border-radius: 16px;
+      max-width: 80%;
+    }
+    .user-message {
+      background: #007bff;
+      color: #fff;
+      align-self: flex-end;
+    }
+    .bot-message {
+      background: #e9ecef;
+      color: #333;
+      align-self: flex-start;
+    }
+    /* Styling for the summary and eco suggestion buttons and paragraphs */
+    .action-button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      color: #fff;
+    }
+    #summarizeButton {
+      background: #28a745;
+    }
+    #ecoButton {
+      background: #17a2b8;
+      margin-left: 10px;
+    }
+    .action-paragraph {
+      margin-top: 15px;
+      font-size: 1em;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-container">
+    <!-- Left Container: Account Info and Transactions -->
+    <div class="left-container">
+      <!-- User Account Details with Summarize and Eco Suggestions -->
+      <div class="container" id="accountContainer">
+        <h1>Account Information</h1>
+        <div class="info">
+          <span class="label">Username:</span>
+          <span id="username"></span>
+        </div>
+        <div class="info">
+          <span class="label">Bank Name:</span>
+          <span id="bankName"></span>
+        </div>
+        <div class="info">
+          <span class="label">Balance:</span>
+          <span id="balance"></span>
+        </div>
+        <!-- Eco Points in a separate span with a green color -->
+        <div class="info">
+          <span class="label">Eco Points:</span>
+          <span id="ecoPoints" class="eco-points"></span>
+        </div>
+        <!-- Buttons for Summarize Transactions and Get More Eco Points -->
+        <div class="actions">
+          <button id="summarizeButton" class="action-button">Summarize Transactions</button>
+          <button id="ecoButton" class="action-button">Get More Eco Points</button>
+        </div>
+        <!-- Paragraphs to display summary and eco suggestions -->
+        <p id="summaryParagraph" class="action-paragraph"></p>
+        <p id="ecoSuggestions" class="action-paragraph"></p>
+      </div>
+
+      <!-- Recent Transactions Table -->
+      <div class="container" id="transactionsContainer">
+        <h1>Recent Transactions</h1>
+        <table id="transactionsTable">
+          <thead>
+            <tr>
+              <th>Transaction ID</th>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Balance</th>
+              <th>Eco</th>
+              <th>Total Eco Products Amounts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Transaction rows will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right Container: Chatbot Window -->
+    <div class="right-container">
+      <div class="chatbot-window">
+        <div class="chatbot-header">Chatbot</div>
+        <div class="chatbot-messages" id="chatbotMessages">
+          <!-- Chat messages will appear here -->
+        </div>
+        <div class="chatbot-input-container">
+          <input type="text" id="chatbotInput" placeholder="Type your message...">
+          <button id="sendButton">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global variable to store fetched transactions
+    let transactionsData = [];
+
+    // -------------------------------
+    // User Account Data and Population
+    // -------------------------------
+    const userData = {
+      username: "johndoe123",
+      bankName: "Global Bank",
+      balance: "$3,240.77",
+      ecoPoints: 350
+    };
+
+    document.getElementById("username").textContent = userData.username;
+    document.getElementById("bankName").textContent = userData.bankName;
+    document.getElementById("balance").textContent = userData.balance;
+    document.getElementById("ecoPoints").textContent = userData.ecoPoints;
+
+    // -------------------------------
+    // Load Transactions from JSON
+    // -------------------------------
+    function loadTransactions() {
+      fetch('/Users/psainavyanth/Documents/NYU-Hackathon/GreenScore/client/data/transactions.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Save transactions globally for the summary function
+          transactionsData = data.transactions;
+          populateTransactionsTable(transactionsData);
+        })
+        .catch(error => {
+          console.error('Error fetching transactions:', error);
+        });
+    }
+
+    function fetchTransactions(userId, days = 30) {
+      fetch(`http://localhost:5001/api/transactions?user_id=${userId}&days=${days}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          populateTransactionsTable(data);
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+
+    function populateTransactionsTable(transactions) {
+      const tbody = document.querySelector('#transactionsTable tbody');
+      transactions.forEach(transaction => {
+        const tr = document.createElement('tr');
+        // Highlight eco transactions in light green
+        if (transaction.eco.toLowerCase() === "yes") {
+          tr.classList.add("eco-transaction");
+        }
+        tr.innerHTML = `
+          <td>${transaction.transactionId}</td>
+          <td>${transaction.date}</td>
+          <td>${transaction.description}</td>
+          <td>${transaction.type}</td>
+          <td>${transaction.amount}</td>
+          <td>${transaction.balance}</td>
+          <td>${transaction.eco}</td>
+          <td>${transaction.totalEco}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // -------------------------------
+    // Summarize Transactions Functionality
+    // -------------------------------
+    function summarizeTransactions() {
+      if (transactionsData.length === 0) {
+        document.getElementById('summaryParagraph').textContent = "No transactions available for summary.";
+        return;
+      }
+
+      let totalTransactions = transactionsData.length;
+      let totalCredit = 0;
+      let totalDebit = 0;
+      let ecoCount = 0;
+
+      transactionsData.forEach(transaction => {
+        // Remove non-numeric characters (like $ or commas) and convert to float
+        let amount = parseFloat(transaction.amount.replace(/[^0-9.-]+/g, ""));
+        if (transaction.type.toLowerCase() === "credit") {
+          totalCredit += amount;
+        } else if (transaction.type.toLowerCase() === "debit") {
+          totalDebit += amount;
+        }
+        if (transaction.eco.toLowerCase() === "yes") {
+          ecoCount++;
+        }
+      });
+
+      // Create a summary text
+      let summary = `You have made ${totalTransactions} transactions. The total credit amount is $${totalCredit.toFixed(2)}, and the total debit amount is $${totalDebit.toFixed(2)}. There are ${ecoCount} eco transaction(s).`;
+
+      // Display the summary in the account information section
+      document.getElementById('summaryParagraph').textContent = summary;
+    }
+
+    // -------------------------------
+    // Get More Eco Points Suggestions
+    // -------------------------------
+    function getEcoSuggestions() {
+      // You can customize these suggestions as needed
+      const suggestions = "To increase your eco points, consider: \n" +
+                          "- Making more eco-friendly transactions (look for eco options when shopping).\n" +
+                          "- Supporting businesses with sustainable practices.\n" +
+                          "- Using digital receipts to reduce paper waste.\n" +
+                          "- Participating in community recycling programs.";
+      document.getElementById('ecoSuggestions').textContent = suggestions;
+    }
+
+    // Add event listeners to the buttons
+    document.getElementById('summarizeButton').addEventListener('click', summarizeTransactions);
+    document.getElementById('ecoButton').addEventListener('click', getEcoSuggestions);
+
+    // Load transactions when DOM is ready
+    document.addEventListener('DOMContentLoaded', loadTransactions);
+
+    // -------------------------------
+    // Chatbot Functionality
+    // -------------------------------
+    const chatbotMessages = document.getElementById('chatbotMessages');
+    const chatbotInput = document.getElementById('chatbotInput');
+    const sendButton = document.getElementById('sendButton');
+
+    // Append a message to the chatbot messages area
+    function appendMessage(sender, text) {
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message');
+      messageDiv.classList.add(sender === 'User' ? 'user-message' : 'bot-message');
+      messageDiv.textContent = text;
+      chatbotMessages.appendChild(messageDiv);
+      // Scroll to the bottom so the new message is visible
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    // Send button click event
+    sendButton.addEventListener('click', () => {
+      const message = chatbotInput.value.trim();
+      if (message !== "") {
+        appendMessage("User", message);
+        chatbotInput.value = "";
+        // Simulate a bot response after a short delay
+        setTimeout(() => {
+          // For this example, the bot echoes back the user's message.
+          appendMessage("Bot", "You asked: " + message);
+        }, 1000);
+      }
+    });
+
+    // Optional: allow pressing Enter to send a message
+    chatbotInput.addEventListener('keypress', (event) => {
+      if (event.key === "Enter") {
+        sendButton.click();
+      }
+    });
+  </script>
+</body>
+</html>

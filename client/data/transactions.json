@@ -1,0 +1,55 @@
+{
+    "transactions": [
+      {
+        "transactionId": "TXN1001",
+        "date": "2023-01-01",
+        "description": "Direct Deposit – Refund",
+        "type": "Credit",
+        "amount": "$186.27",
+        "balance": "$3,686.27",
+        "eco": "No",
+        "totalEco": "$0.00"
+      },
+      {
+        "transactionId": "TXN1002",
+        "date": "2023-01-02",
+        "description": "Online Purchase – Amazon",
+        "type": "Debit",
+        "amount": "$158.38",
+        "balance": "$3,527.89",
+        "eco": "Yes",
+        "totalEco": "$16.15"
+      },
+      {
+        "transactionId": "TXN1003",
+        "date": "2023-01-03",
+        "description": "ATM Withdrawal",
+        "type": "Debit",
+        "amount": "$140.25",
+        "balance": "$3,387.64",
+        "eco": "No",
+        "totalEco": "$0.00"
+      },
+      {
+        "transactionId": "TXN1004",
+        "date": "2023-01-04",
+        "description": "POS Purchase – Coffee Shop",
+        "type": "Debit",
+        "amount": "$18.03",
+        "balance": "$3,369.61",
+        "eco": "Yes",
+        "totalEco": "$1.21"
+      },
+      {
+        "transactionId": "TXN1005",
+        "date": "2023-01-05",
+        "description": "Online Payment – Utilities",
+        "type": "Debit",
+        "amount": "$128.84",
+        "balance": "$3,240.77",
+        "eco": "No",
+        "totalEco": "$0.00"
+      }
+    ]
+  }
+  

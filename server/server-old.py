@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from bson import ObjectId
 import pytz
 from flask_cors import CORS  # Import Flask-CORS
-from together import Together
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -17,7 +17,7 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:000"}})
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:5001"}})
 
 # MongoDB Connection Setup
 try:
@@ -141,55 +141,15 @@ def get_transactions():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-client = Together(api_key="2c604a3524b37e3c06c59fe9738b59e952d4d761b57e9a9290e5d6c02e42f301")
-
-@app.route("/api/summary", methods=["GET"])
+@app.route("/api/summary", methods=["POST"])
 def get_summary():
     """Generate a summary based on user's transactions"""
     try:
-        user_id = request.args.get("user_id")  # GET requests use request.args, not request.json
-        if not user_id:
-            return jsonify({"error": "Missing user_id parameter"}), 400
-
-        txns = list(transactions.find({"userId": user_id}))
-
-        if not txns:
-            return jsonify({"error": "No transactions found for the given user_id."}), 404
-
-        # Constructing the transaction data in CSV format
-        txn_data = "\n".join([f"{txn['transactionId']},{txn['date']},{txn['description']},{txn['type']},{txn['amount']},{txn['balance']},{txn['eco']},{txn['totalEco']}" for txn in txns])
-
-        # Constructing the prompt to send to the model
-        prompt = f"""
-        Transaction ID,Date,Description,Type,Amount,Balance,Eco,Total eco products amounts
-        {txn_data}
-
-        I have a user whose transactions are listed above.
-        Please summarize the user's spending behavior, focusing on eco-friendly transactions, identifying where they have spent the most, and whether they are taking actions that align with improving their eco points. Suggest how they can improve their eco points while maintaining a sustainable budget.
-        """
-
-        # Calling the chat completions API
-        response = client.chat.completions.create(
-            model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo-128K",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=None,
-            temperature=0.7,
-            top_p=0.7,
-            top_k=50,
-            repetition_penalty=1,
-            stop=["<|eot_id|>", "<|eom_id|>"],
-            stream=True
-        )
-
-        # Collecting the response stream
-        summary = ""
-        for token in response:
-            if hasattr(token, 'choices'):
-                summary += token.choices[0].delta.content
-        
-        return jsonify({"summary": summary.strip()})
-
+        user_id = request.json.get("user_id")
+        txns = list(transactions.find({"user_id": user_id}))
+        prompt = "Provide creative financial and environmental insights for these transactions:"
+        summary = get_ai_response(prompt, txns)
+        return jsonify({"summary": summary})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -197,52 +157,13 @@ def get_summary():
 def get_suggestions():
     """Generate suggestions to improve eco-friendly spending"""
     try:
-        user_id = request.args.get("user_id")  # GET requests use request.args, not request.json
-        if not user_id:
-            return jsonify({"error": "Missing user_id parameter"}), 400
-
-        txns = list(transactions.find({"userId": user_id}))
-
-        if not txns:
-            return jsonify({"error": "No transactions found for the given user_id."}), 404
-
-        # Constructing the transaction data in CSV format
-        txn_data = "\n".join([f"{txn['transactionId']},{txn['date']},{txn['description']},{txn['type']},{txn['amount']},{txn['balance']},{txn['eco']},{txn['totalEco']}" for txn in txns])
-
-        # Constructing the prompt to send to the model
-        prompt = f"""
-        Transaction ID,Date,Description,Type,Amount,Balance,Eco,Total eco products amounts
-        {txn_data}
-
-        I have a user whose transactions are listed above.
-        Based on this data, please provide suggestions on how the user can improve their eco points by making better spending choices. 
-        Consider products or services they should focus on buying to maximize eco points and areas where they should reduce spending for the environment. Additionally, if there are any habits they should change, suggest those as well.
-        """
-
-        # Calling the chat completions API
-        response = client.chat.completions.create(
-            model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo-128K",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=None,
-            temperature=0.7,
-            top_p=0.7,
-            top_k=50,
-            repetition_penalty=1,
-            stop=["<|eot_id|>", "<|eom_id|>"],
-            stream=True
-        )
-
-        # Collecting the response stream
-        suggestions = ""
-        for token in response:
-            if hasattr(token, 'choices'):
-                suggestions += token.choices[0].delta.content
-
-        return jsonify({"suggestions": suggestions.strip()})
-
+        user_id = request.args.get("user_id")
+        txns = list(transactions.find({"user_id": user_id}))
+        prompt = "Give 5 actionable suggestions to improve eco-friendly spending:"
+        suggestions = get_ai_response(prompt, txns)
+        return jsonify({"suggestions": suggestions})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 @app.route("/api/goals", methods=["POST"])
 def set_goal():
